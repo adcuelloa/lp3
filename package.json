@@ -1,0 +1,45 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "turbo build",
+    "clean": "turbo clean && rm -rf node_modules",
+    "clean:workspaces": "turbo clean",
+    "db:migrate": "pnpm -F @project/db db:migrate",
+    "db:studio": "pnpm -F @project/db db:studio",
+    "dev": "turbo dev",
+    "fmt": "pnpm fmt:root && turbo fmt",
+    "fmt:deps": "syncpack format",
+    "fmt:root": "oxfmt \".agents/**/*.md\" \"*.md\" \"*.json\" \"*.js\" \"*.cjs\" \"*.yaml\" \"infra/**/*.{md,yml,yaml}\" \".github/**/*.{yml,yaml}\"",
+    "i18n:parity": "node scripts/check-i18n-parity.mjs",
+    "infra:base": "docker compose -f infra/compose.dev.yaml",
+    "infra:clean": "pnpm infra:base down -v --rmi local",
+    "infra:down": "pnpm infra:base down",
+    "infra:logs": "pnpm infra:base logs -f",
+    "infra:ps": "pnpm infra:base ps",
+    "infra:restart": "pnpm infra:down && pnpm infra:up",
+    "infra:up": "pnpm infra:base up -d",
+    "lint": "turbo lint",
+    "lint:deps": "syncpack lint",
+    "lint:fix": "turbo lint:fix",
+    "type-check": "turbo type-check"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "6.0.1",
+    "oxfmt": "0.46.0",
+    "oxlint": "1.61.0",
+    "oxlint-tsgolint": "0.21.1",
+    "syncpack": "14.3.0",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  },
+  "engines": {
+    "node": ">=24.13.0"
+  },
+  "packageManager": "pnpm@10.33.2"
+}

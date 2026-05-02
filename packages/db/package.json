@@ -1,0 +1,49 @@
+{
+  "name": "@project/db",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./sql": "./src/sql/index.ts"
+  },
+  "scripts": {
+    "build": "echo 'No build needed'",
+    "clean": "rm -rf dist && rm -f tsconfig.tsbuildinfo",
+    "db:check": "drizzle-kit check",
+    "db:create-admin": "tsx src/scripts/create-admin.ts",
+    "db:drop": "drizzle-kit drop",
+    "db:generate": "drizzle-kit generate",
+    "db:intro": "drizzle-kit introspect",
+    "db:migrate": "drizzle-kit migrate",
+    "db:pull": "drizzle-kit pull",
+    "db:push": "drizzle-kit push",
+    "db:reset": "tsx src/scripts/reset.ts",
+    "db:seed": "tsx src/scripts/seed.ts",
+    "db:seed:smoke": "tsx src/scripts/seed-smoke.ts",
+    "db:setup-functions": "tsx src/scripts/setup-functions.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:up": "drizzle-kit up",
+    "fmt": "oxfmt",
+    "lint": "oxlint --type-aware .",
+    "lint:fix": "oxlint --type-aware --fix .",
+    "type-check": "oxlint --type-aware --type-check ."
+  },
+  "dependencies": {
+    "drizzle-orm": "1.0.0-rc.1",
+    "uuidv7": "1.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "8.20.0",
+    "argon2": "0.44.0",
+    "drizzle-kit": "1.0.0-rc.1",
+    "pg": "8.20.0",
+    "tsx": "4.21.0",
+    "typescript": "catalog:",
+    "zod": "4.3.6"
+  },
+  "peerDependencies": {
+    "zod": "4.3.6"
+  }
+}

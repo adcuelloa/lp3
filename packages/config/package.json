@@ -1,0 +1,13 @@
+{
+  "name": "@project/config",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared TypeScript configurations for the Project monorepo",
+  "type": "module",
+  "exports": {
+    "./vite-plugins": "./vite-plugins.js"
+  },
+  "devDependencies": {
+    "vite": "catalog:"
+  }
+}

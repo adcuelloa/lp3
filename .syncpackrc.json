@@ -1,0 +1,34 @@
+{
+  "$schema": "./node_modules/syncpack/schema.json",
+  "indent": "  ",
+  "source": ["package.json", "apps/*/package.json", "packages/*/package.json"],
+  "sortFirst": [
+    "name",
+    "version",
+    "private",
+    "description",
+    "license",
+    "type",
+    "sideEffects",
+    "main",
+    "module",
+    "types",
+    "exports",
+    "scripts"
+  ],
+  "versionGroups": [
+    {
+      "label": "Use workspace protocol for internal monorepo packages",
+      "packages": ["**"],
+      "dependencies": ["@project/*"],
+      "pinVersion": "workspace:*"
+    },
+    {
+      "label": "Allow shared libraries to have broad peer dependencies",
+      "packages": ["@project/*"],
+      "dependencies": ["react", "react-dom", "i18next", "react-i18next"],
+      "dependencyTypes": ["peer"],
+      "isIgnored": true
+    }
+  ]
+}

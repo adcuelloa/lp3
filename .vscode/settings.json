@@ -1,0 +1,100 @@
+{
+  // === Editor Config ===
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  // === Code Actions ===
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit",
+    "source.organizeImports": "never"
+  },
+  // === Oxc Config ===
+  "oxc.enable": true,
+  "oxc.lint.run": "onType",
+  "oxc.typeAware": true,
+  "oxc.requireConfig": true,
+  // === Files Config ===
+  "files.associations": {
+    "*.mjs": "javascript",
+    "*.cjs": "javascript",
+    "*.css": "tailwindcss"
+  },
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  // === Tailwind CSS Config ===
+  "tailwindCSS.classFunctions": ["tw", "clsx", "tw\\.[a-z-]+"],
+  // === Overrides específicos ===
+  "[html]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  // === Otras Configuraciones ===
+  "editor.fontFamily": "Cascadia Code, Consolas, 'Courier New', monospace",
+  "editor.wordWrap": "on",
+  "git.autofetch": true,
+  "[sql]": {
+    "editor.defaultFormatter": "ms-ossdata.vscode-pgsql"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  // === NestJS File Icons ===
+  "symbols.files.associations": {
+    "*.module.ts": "nest",
+    "*.controller.ts": "nest-controller",
+    "*.service.ts": "nest-service",
+    "*.guard.ts": "nest-guard",
+    "*.interceptor.ts": "nest-interceptor",
+    "*.filter.ts": "nest-filter",
+    "*.pipe.ts": "nest-pipe",
+    "*.middleware.ts": "nest-middleware",
+    "*.cookie.ts": "nest-middleware",
+    "*.gateway.ts": "nest-gateway",
+    "*.decorator.ts": "nest-decorator",
+    "*.dto.ts": "typescript",
+    "*.entity.ts": "database",
+    "*.interface.ts": "typescript-def",
+    "*.spec.ts": "test-ts",
+    "nest-app.ts": "nest",
+    "app.module.ts": "nest"
+  },
+  // === JavaScript/TypeScript Config ===
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.experimental.useTsgo": true,
+  // === TypeScript para NestJS ===
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.preferences.importModuleSpecifier": "shortest",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal",
+  // === Exclusiones de búsqueda ===
+  "search.exclude": {
+    "**/tsconfig.tsbuildinfo": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/logs": true,
+    "pnpm-lock.yaml": true
+  },
+  // === Exclusiones de watcher ===
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/.turbo/**": true,
+    "**/logs/**": true
+  },
+  "githubPullRequests.createDefaultBaseBranch": "repositoryDefault",
+  "terminal.integrated.suggest.enabled": true
+}

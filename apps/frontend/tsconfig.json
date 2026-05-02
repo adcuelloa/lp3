@@ -1,0 +1,12 @@
+{
+  "extends": "../../packages/config/tsconfig.vite.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["src", "src/types"],
+  "exclude": ["node_modules", "dist", ".turbo"]
+}

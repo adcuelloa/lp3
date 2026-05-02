@@ -1,0 +1,17 @@
+{
+  "extends": "../../packages/config/tsconfig.node.json",
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests", "logs", ".turbo"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
