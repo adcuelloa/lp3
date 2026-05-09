@@ -12,11 +12,7 @@ const envPath = resolve(__dirname, "../../env/backend.env");
 try {
   process.loadEnvFile(envPath);
 } catch {
-  if (process.env.NODE_ENV !== "production") {
-    console.warn(
-      `⚠️ No se pudo cargar el .env en: ${envPath}. Si Knip está analizando, puedes ignorar esto.`
-    );
-  }
+  // Silent failure (only dev)
 }
 
 const { DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME } = process.env;
@@ -27,7 +23,7 @@ export default defineConfig({
   schema: "./src/index.ts",
   out: "./migrations",
   dialect: "postgresql",
-  schemaFilter: ["public"],
+  schemaFilter: ["public", "core"],
   dbCredentials: {
     url: dbUrl,
   },

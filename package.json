@@ -12,9 +12,9 @@
     "dev": "turbo dev",
     "fmt": "pnpm fmt:root && turbo fmt",
     "fmt:deps": "syncpack format",
-    "fmt:root": "oxfmt \".agents/**/*.md\" \"*.md\" \"*.json\" \"*.js\" \"*.cjs\" \"*.yaml\" \"infra/**/*.{md,yml,yaml}\" \".github/**/*.{yml,yaml}\"",
+    "fmt:root": "oxfmt \".agents/**/*.md\" \"*.md\" \"*.json\" \"*.js\" \"*.cjs\" \"*.yml\" \"infra/**/*.{md,yml,yaml}\" \".github/**/*.{yml,yaml}\"",
     "i18n:parity": "node scripts/check-i18n-parity.mjs",
-    "infra:base": "docker compose -f infra/compose.dev.yaml",
+    "infra:base": "docker compose -f infra/compose.dev.yml",
     "infra:clean": "pnpm infra:base down -v --rmi local",
     "infra:down": "pnpm infra:base down",
     "infra:logs": "pnpm infra:base logs -f",
@@ -39,7 +39,7 @@
     "vite": "catalog:"
   },
   "engines": {
-    "node": ">=24.13.0"
+    "node": ">=24.15.0"
   },
-  "packageManager": "pnpm@10.33.2"
+  "packageManager": "pnpm@11.0.9"
 }
