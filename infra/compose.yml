@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:18.1-alpine
+    container_name: postgres
+    env_file:
+      - ../env/backend.env
+    environment:
+      POSTGRES_DB: ${DB_NAME:-project}
+      POSTGRES_USER: ${DB_USER:-project}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          '[ -n "$${POSTGRES_USER}" ] && [ -n "$${POSTGRES_DB}" ] && [ -n "$${POSTGRES_PASSWORD}" ] && PGPASSWORD="$${POSTGRES_PASSWORD}" psql -h 127.0.0.1 -p 5432 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}" -tAc "SELECT 1" | grep -qx 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    container_name: api_prod
+    env_file:
+      - ../env/backend.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
