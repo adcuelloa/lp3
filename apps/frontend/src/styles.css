@@ -1,16 +1,49 @@
-@import "tailwindcss/preflight";
+@import "tailwindcss";
+@import "tw-animate-css";
 
-@theme {
-  --color-accent: #D4783E;
-  --color-accent-light: #EEBF9F;
-  --color-accent-dark: #A85C28;
-  --color-warm: #F7EEE4;
-  --color-cream: #FFFAF4;
-  --color-espresso: #1A0F07;
-  --color-cocoa: #4A2E18;
-  --color-muted: #7A5A40;
-  --color-border: #E8D4BC;
+/* ── Shadcn semantic tokens + warm terracotta theme ── */
+@theme inline {
+  /* Layout */
+  --color-background: #f7eee4;
+  --color-foreground: #1a0f07;
 
+  /* Card / Popover */
+  --color-card: #fffaf4;
+  --color-card-foreground: #1a0f07;
+  --color-popover: #fffaf4;
+  --color-popover-foreground: #1a0f07;
+
+  /* Primary = terracotta */
+  --color-primary: #d4783e;
+  --color-primary-foreground: #fffaf4;
+
+  /* Secondary = warm sand */
+  --color-secondary: #f0e2d0;
+  --color-secondary-foreground: #4a2e18;
+
+  /* Muted */
+  --color-muted: #ede0d0;
+  --color-muted-foreground: #7a5a40;
+
+  /* Accent = subtle hover (NOT terracotta) */
+  --color-accent: #f0e2d0;
+  --color-accent-foreground: #4a2e18;
+
+  /* Destructive */
+  --color-destructive: #c0392b;
+
+  /* Borders / inputs / focus ring */
+  --color-border: #e8d4bc;
+  --color-input: #e8d4bc;
+  --color-ring: #d4783e;
+
+  /* Extra brand aliases */
+  --color-brand: #d4783e;
+  --color-brand-light: #eebf9f;
+  --color-espresso: #1a0f07;
+  --color-cocoa: #4a2e18;
+
+  /* Typography */
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
 }
@@ -24,9 +57,9 @@ body,
 }
 
 body {
-  background-color: var(--color-warm);
+  background-color: var(--color-background);
   font-family: var(--font-body);
-  color: var(--color-espresso);
+  color: var(--color-foreground);
 }
 
 /* Subtle grain texture */
@@ -40,6 +73,7 @@ body::after {
   z-index: 9999;
 }
 
+/* ── Custom animations ── */
 @keyframes fade-up {
   from {
     opacity: 0;
@@ -76,12 +110,6 @@ body::after {
   }
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .animate-fade-up {
   animation: fade-up 0.55s ease-out both;
 }
@@ -92,8 +120,4 @@ body::after {
 
 .animate-heart-pop {
   animation: heart-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-.animate-spin {
-  animation: spin 0.8s linear infinite;
 }

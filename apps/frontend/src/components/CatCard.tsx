@@ -1,18 +1,22 @@
 import { Heart, HeartHandshake, Pencil } from "lucide-react";
 import { useState } from "react";
 
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+
 interface Cat {
   id: number;
   name: string;
 }
 
 const PALETTES = [
-  { bg: "#FDE8D4", border: "#F0C4A0", emoji: "🐱" },
-  { bg: "#E4F0E4", border: "#B8D8B8", emoji: "😸" },
-  { bg: "#F4EAE0", border: "#E4C8B0", emoji: "🐈" },
-  { bg: "#E2ECF8", border: "#B8CCE8", emoji: "😺" },
-  { bg: "#F4E2EE", border: "#E8B8D4", emoji: "😻" },
-  { bg: "#EDF4E2", border: "#C8E0B0", emoji: "🐈‍⬛" },
+  { bg: "#fde8d4", border: "#f0c4a0", emoji: "🐱" },
+  { bg: "#e4f0e4", border: "#b8d8b8", emoji: "😸" },
+  { bg: "#f4eae0", border: "#e4c8b0", emoji: "🐈" },
+  { bg: "#e2ecf8", border: "#b8cce8", emoji: "😺" },
+  { bg: "#f4e2ee", border: "#e8b8d4", emoji: "😻" },
+  { bg: "#edf4e2", border: "#c8e0b0", emoji: "🐈‍⬛" },
 ];
 
 const PERSONALITIES = [
@@ -38,76 +42,61 @@ export default function CatCard({ cat, index, onEdit }: CatCardProps) {
   const personality = PERSONALITIES[cat.id % PERSONALITIES.length];
 
   return (
-    <div
-      className="rounded-2xl p-6 flex flex-col gap-5 transition-transform duration-300 hover:-translate-y-1"
+    <Card
+      className="gap-0 py-0 transition-transform duration-300 hover:-translate-y-1"
       style={{
         backgroundColor: palette.bg,
-        border: `1px solid ${palette.border}`,
-        boxShadow: "0 2px 16px rgba(26, 15, 7, 0.06), 0 1px 3px rgba(26, 15, 7, 0.04)",
+        borderColor: palette.border,
         animation: `fade-up 0.5s ease-out ${index * 65}ms both`,
       }}
     >
-      {/* Top row */}
-      <div className="flex items-start justify-between">
-        <span
-          className="text-5xl leading-none select-none"
-          style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))" }}
-        >
-          {palette.emoji}
-        </span>
-        <button
-          onClick={onEdit}
-          className="p-2 rounded-xl transition-all hover:opacity-60 active:scale-95"
-          style={{ color: "var(--color-muted)" }}
-          aria-label={`Editar nombre de ${cat.name}`}
-        >
-          <Pencil size={14} />
-        </button>
-      </div>
-
-      {/* Info */}
-      <div className="flex-1">
-        <h3
-          className="text-2xl font-bold leading-tight"
-          style={{ fontFamily: "var(--font-display)", color: "var(--color-espresso)" }}
-        >
-          {cat.name}
-        </h3>
-        <p
-          className="text-xs mt-1.5 uppercase tracking-widest font-semibold"
-          style={{ color: "var(--color-muted)", fontFamily: "var(--font-body)", letterSpacing: "0.15em" }}
-        >
-          {personality}
-        </p>
-      </div>
-
-      {/* Adopt button */}
-      {adopted ? (
-        <div
-          className="flex items-center gap-2 justify-center py-3 rounded-xl text-sm font-semibold"
-          style={{
-            backgroundColor: "rgba(212, 120, 62, 0.12)",
-            color: "var(--color-accent)",
-            fontFamily: "var(--font-body)",
-          }}
-        >
-          <HeartHandshake size={16} className="animate-heart-pop" />
-          ¡Solicitud enviada!
+      <CardContent className="flex flex-col gap-4 p-6">
+        {/* Top row: emoji + edit */}
+        <div className="flex items-start justify-between">
+          <span
+            className="text-5xl leading-none select-none"
+            style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))" }}
+          >
+            {palette.emoji}
+          </span>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onEdit}
+            aria-label={`Editar nombre de ${cat.name}`}
+            className="text-muted-foreground"
+          >
+            <Pencil data-icon />
+          </Button>
         </div>
-      ) : (
-        <button
-          onClick={() => setAdopted(true)}
-          className="flex items-center gap-2 justify-center w-full py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-          style={{
-            backgroundColor: "var(--color-accent)",
-            color: "white",
-            fontFamily: "var(--font-body)",
-          }}
-        >
-          <Heart size={15} />
-          Adoptar
-        </button>
-      )}
-    </div>
+
+        {/* Name + personality */}
+        <div>
+          <h3
+            className="text-2xl font-bold leading-tight text-foreground"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {cat.name}
+          </h3>
+          <Badge variant="secondary" className="mt-2 text-xs uppercase tracking-widest">
+            {personality}
+          </Badge>
+        </div>
+      </CardContent>
+
+      <CardFooter className="p-6 pt-0">
+        {adopted ? (
+          <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary bg-primary/10">
+            <HeartHandshake size={16} className="animate-heart-pop" />
+            ¡Solicitud enviada!
+          </div>
+        ) : (
+          <Button className="w-full rounded-xl" onClick={() => setAdopted(true)}>
+            <Heart data-icon="inline-start" />
+            Adoptar
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
   );
 }
