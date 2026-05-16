@@ -3,9 +3,17 @@ import { FastifyAdapter, type NestFastifyApplication } from "@nestjs/platform-fa
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import { AppModule } from "./app.module";
+import { securityConfig } from "./config";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+
+  app.enableCors({
+    origin: securityConfig.corsOrigin,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  });
 
   // Establecer prefijo global para todas las rutas
   app.setGlobalPrefix("api");
