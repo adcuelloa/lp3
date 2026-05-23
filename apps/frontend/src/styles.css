@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource-variable/geist/wght.css";
 
 /* ── Shadcn semantic tokens + warm terracotta theme ── */
 @theme inline {
@@ -44,7 +45,7 @@
   --color-cocoa: #4a2e18;
 
   /* Typography */
-  --font-display: "Playfair Display", Georgia, serif;
+  --font-display: "Geist Variable", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
 }
 
