@@ -29,11 +29,12 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "6.0.1",
-    "oxfmt": "0.46.0",
-    "oxlint": "1.61.0",
-    "oxlint-tsgolint": "0.21.1",
-    "syncpack": "14.3.0",
+    "@vitejs/plugin-react": "6.0.2",
+    "oxfmt": "0.51.0",
+    "oxlint": "1.66.0",
+    "oxlint-plugin-react-doctor": "0.2.2",
+    "oxlint-tsgolint": "0.23.0",
+    "syncpack": "15.3.1",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
@@ -41,5 +42,5 @@
   "engines": {
     "node": ">=24.15.0"
   },
-  "packageManager": "pnpm@11.0.9"
+  "packageManager": "pnpm@11.2.2"
 }

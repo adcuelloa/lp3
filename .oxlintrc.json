@@ -1,8 +1,16 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["import"],
+  "plugins": ["import", "unicorn", "oxc", "typescript"],
+  "jsPlugins": [{ "name": "react-doctor", "specifier": "oxlint-plugin-react-doctor" }],
   "categories": {
-    "correctness": "off"
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "19.0.0"
+    }
   },
   "env": {
     "es2024": true,
@@ -18,82 +26,17 @@
     "**/logs/**",
     "**/*.log",
     "**/.env*",
-    "**/.astro/**"
+    "**/.astro/**",
+    ".claude/**",
+    ".agents/**"
   ],
+
   "rules": {
-    // ── ESLint recommended (js.configs.recommended equivalent) ──────────────
-    "constructor-super": "error",
-    "for-direction": "error",
-    "no-async-promise-executor": "error",
-    "no-case-declarations": "error",
-    "no-class-assign": "error",
-    "no-compare-neg-zero": "error",
-    "no-cond-assign": "error",
-    "no-const-assign": "error",
-    "no-constant-binary-expression": "error",
-    "no-constant-condition": "error",
-    "no-control-regex": "error",
-    "no-delete-var": "error",
-    "no-dupe-class-members": "error",
-    "no-dupe-else-if": "error",
-    "no-dupe-keys": "error",
-    "no-duplicate-case": "error",
-    "no-empty": "error",
-    "no-empty-character-class": "error",
-    "no-empty-pattern": "error",
-    "no-empty-static-block": "error",
-    "no-ex-assign": "error",
-    "no-extra-boolean-cast": "error",
-    "no-fallthrough": "error",
-    "no-func-assign": "error",
-    "no-global-assign": "error",
-    "no-import-assign": "error",
-    "no-invalid-regexp": "error",
-    "no-irregular-whitespace": "error",
-    "no-loss-of-precision": "error",
-    "no-misleading-character-class": "error",
-    "no-new-native-nonconstructor": "error",
-    "no-nonoctal-decimal-escape": "error",
-    "no-obj-calls": "error",
-    "no-prototype-builtins": "error",
-    "no-redeclare": "error",
-    "no-regex-spaces": "error",
-    "no-self-assign": "error",
-    "no-setter-return": "error",
-    "no-shadow-restricted-names": "error",
-    "no-sparse-arrays": "error",
-    "no-this-before-super": "error",
-    "no-unassigned-vars": "error",
-    "no-unsafe-finally": "error",
-    "no-unsafe-negation": "error",
-    "no-unsafe-optional-chaining": "error",
-    "no-unused-labels": "error",
-    "no-unused-private-class-members": "error",
-    "no-useless-backreference": "error",
-    "no-useless-catch": "error",
-    "no-useless-escape": "error",
-    "no-with": "error",
-    "preserve-caught-error": "error",
-    "require-yield": "error",
-    "use-isnan": "error",
-    "valid-typeof": "error",
-    // ── Custom rules ─────────────────────────────────────────────────────────
-    "no-console": [
-      "warn",
-      {
-        "allow": ["warn", "error", "info"]
-      }
-    ],
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
     "no-debugger": "warn",
     // no-unused-vars disabled globally — TypeScript override below handles it
     "no-unused-vars": "off",
-    "eqeqeq": [
-      "error",
-      "always",
-      {
-        "null": "ignore"
-      }
-    ],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
     // Sort import members: { A, B, C } within a single import statement
     // NOTE: import/order (with pathGroups) is not available in oxlint
     "sort-imports": [
@@ -104,18 +47,25 @@
         "ignoreMemberSort": false
       }
     ],
+
+    // Allow unassigned imports for side effects (e.g. polyfills, CSS)
+    "import/no-unassigned-import": "off",
+
     // ── Import plugin rules ──────────────────────────────────────────────────
     "import/no-duplicates": "error",
     "import/first": "error",
     "import/no-absolute-path": "error",
     // import/no-cycle is available but disabled: builds full dep graph → OOM on 8 GB RAM
-    "import/no-cycle": "off"
+    "import/no-cycle": "off",
+
+    // ── React Doctor: security (all files) ───────────────────────────────────
+    "react-doctor/no-eval": "error"
   },
+
   "overrides": [
     // ── TypeScript files ─────────────────────────────────────────────────────
     {
-      "files": ["**/*.{ts,tsx,d.ts}"],
-      "plugins": ["typescript"],
+      "files": ["**/*.{ts,tsx,d.ts,astro}"],
       "rules": {
         // From @typescript-eslint/recommended
         "typescript/ban-ts-comment": "error",
@@ -138,6 +88,7 @@
         "typescript/triple-slash-reference": "error",
         "no-unused-expressions": "error",
         "typescript/explicit-module-boundary-types": "off",
+
         // ── Type-aware rules (require oxlint-tsgolint) ───────────────────────
         // warn until existing floating promises are fixed, then upgrade to error
         "typescript/no-floating-promises": "warn",
@@ -147,31 +98,24 @@
         "typescript/await-thenable": "error",
         "typescript/restrict-template-expressions": [
           "error",
-          {
-            "allowNumber": true,
-            "allowBoolean": true,
-            "allowNullish": true
-          }
+          { "allowNumber": true, "allowBoolean": true, "allowNullish": true }
         ],
         "typescript/no-for-in-array": "error",
         "typescript/no-implied-eval": "error",
         "typescript/no-misused-spread": "error",
         "typescript/require-array-sort-compare": "error",
         "typescript/unbound-method": "error",
+
         // ── TS best practices ────────────────────────────────────────────────
         // Enforce import type for type-only imports everywhere
         "typescript/consistent-type-imports": [
           "error",
-          {
-            "prefer": "type-imports",
-            "fixStyle": "inline-type-imports"
-          }
+          { "prefer": "type-imports", "fixStyle": "inline-type-imports" }
         ],
         // Prevent `import type { Foo } from 'foo'` when foo has runtime side effects
         "typescript/no-import-type-side-effects": "error",
         // Enforce unknown in catch blocks instead of any
         "typescript/use-unknown-in-catch-callback-variable": "warn",
-        // Replaces @typescript-eslint/no-unused-vars
         "typescript/no-deprecated": "error",
         "no-unused-vars": [
           "warn",
@@ -185,21 +129,62 @@
         "import/named": "error"
       }
     },
+
+    // ── React Doctor: JS performance & bundle size (frontend only) ───────────
+    // Scoped to frontend apps + UI package
+    {
+      "files": [
+        "apps/academy/**/*.{ts,tsx}",
+        "apps/panel/**/*.{ts,tsx}",
+        "apps/accounts/**/*.{ts,tsx}",
+        "apps/myaccount/**/*.{ts,tsx}",
+        "apps/landing/**/*.{ts,tsx}",
+        "packages/ui/**/*.{ts,tsx}"
+      ],
+      "rules": {
+        // Client secrets must never be hardcoded in frontend code
+        "react-doctor/no-secrets-in-client-code": "error",
+        // Sequential awaits that could run concurrently
+        "react-doctor/async-parallel": "warn",
+        "react-doctor/async-await-in-loop": "warn",
+        "react-doctor/js-flatmap-filter": "warn",
+        "react-doctor/js-combine-iterations": "warn",
+        "react-doctor/js-tosorted-immutable": "warn",
+        "react-doctor/js-early-exit": "warn",
+        "react-doctor/js-hoist-regexp": "warn",
+        "react-doctor/js-hoist-intl": "warn",
+        "react-doctor/js-min-max-loop": "warn",
+        "react-doctor/js-set-map-lookups": "warn",
+        "react-doctor/js-index-maps": "warn",
+        "react-doctor/js-cache-storage": "warn",
+        "react-doctor/js-cache-property-access": "warn",
+        "react-doctor/js-length-check-first": "warn",
+        // Direct DOM style mutations are rare in React (React manages the DOM)
+        "react-doctor/js-batch-dom-css": "off",
+
+        // Bundle size — project uses barrel index.ts by convention
+        "react-doctor/no-barrel-import": "off",
+        // Dynamic imports with computed paths prevent bundler tree-shaking
+        "react-doctor/no-dynamic-import-path": "error",
+        "react-doctor/no-full-lodash-import": "warn",
+        "react-doctor/no-moment": "warn",
+        "react-doctor/prefer-dynamic-import": "warn",
+        "react-doctor/use-lazy-motion": "warn",
+        // Raw <script> tags in React components are uncommon in a Vite SPA
+        "react-doctor/no-undeferred-third-party": "off"
+      }
+    },
+
     // ── React + JSX A11y: for React apps and UI package ──────────────────────
     {
-      "files": ["apps/**/*.{tsx,jsx}"],
+      "files": ["apps/**/*.{tsx,jsx}", "packages/ui/src/**/*.{tsx,jsx}"],
       "plugins": ["react", "jsx-a11y"],
       "rules": {
         // React recommended rules
         "react/jsx-key": "error",
         "react/jsx-no-comment-textnodes": "error",
         "react/jsx-no-duplicate-props": "error",
-        "react/jsx-no-target-blank": [
-          "error",
-          {
-            "allowReferrer": true
-          }
-        ],
+        "react/jsx-no-target-blank": ["error", { "allowReferrer": true }],
         "react/jsx-no-undef": "error",
         "react/no-children-prop": "error",
         "react/no-danger-with-children": "error",
@@ -218,16 +203,11 @@
         // React Hooks
         "react/rules-of-hooks": "error",
         "react/exhaustive-deps": "warn",
+
         // JSX A11y recommended rules
         "jsx-a11y/alt-text": "error",
         "jsx-a11y/anchor-has-content": "error",
-        "jsx-a11y/anchor-is-valid": [
-          "warn",
-          {
-            "components": ["Link"],
-            "specialLink": ["to"]
-          }
-        ],
+        "jsx-a11y/anchor-is-valid": ["warn", { "components": ["Link"], "specialLink": ["to"] }],
         "jsx-a11y/aria-activedescendant-has-tabindex": "error",
         "jsx-a11y/aria-props": "error",
         "jsx-a11y/aria-proptypes": "error",
@@ -238,12 +218,7 @@
         "jsx-a11y/html-has-lang": "error",
         "jsx-a11y/iframe-has-title": "error",
         "jsx-a11y/img-redundant-alt": "error",
-        "jsx-a11y/label-has-associated-control": [
-          "warn",
-          {
-            "assert": "either"
-          }
-        ],
+        "jsx-a11y/label-has-associated-control": ["warn", { "assert": "either" }],
         "jsx-a11y/media-has-caption": "error",
         "jsx-a11y/mouse-events-have-key-events": "error",
         "jsx-a11y/no-access-key": "error",
@@ -255,9 +230,135 @@
         "jsx-a11y/role-has-required-aria-props": "error",
         "jsx-a11y/role-supports-aria-props": "error",
         "jsx-a11y/scope": "error",
-        "jsx-a11y/tabindex-no-positive": "error"
+        "jsx-a11y/tabindex-no-positive": "error",
+
+        // ── React Doctor: state & effects ─────────────────────────────────────
+        // Project uses TanStack Query — fetching in useEffect is an anti-pattern
+        "react-doctor/no-fetch-in-effect": "error",
+        "react-doctor/no-derived-state-effect": "error",
+        // Mirroring props into state via useEffect prevents single source of truth
+        "react-doctor/no-mirror-prop-effect": "error",
+        "react-doctor/no-mutable-in-deps": "error",
+        "react-doctor/no-cascading-set-state": "error",
+        // Chained effects (effect → state → effect) create race conditions
+        "react-doctor/no-effect-chain": "error",
+        "react-doctor/no-effect-event-handler": "error",
+        "react-doctor/no-effect-event-in-deps": "error",
+        "react-doctor/no-direct-state-mutation": "error",
+        // setState during render causes infinite loops
+        "react-doctor/no-set-state-in-render": "error",
+        "react-doctor/no-derived-useState": "error",
+        "react-doctor/no-event-trigger-state": "warn",
+        "react-doctor/no-prop-callback-in-effect": "warn",
+        "react-doctor/rerender-dependencies": "error",
+        "react-doctor/rerender-lazy-state-init": "warn",
+        "react-doctor/rerender-functional-setstate": "warn",
+        "react-doctor/rerender-state-only-in-handlers": "warn",
+        "react-doctor/rerender-defer-reads-hook": "warn",
+        "react-doctor/advanced-event-handler-refs": "warn",
+        "react-doctor/prefer-use-effect-event": "warn",
+        "react-doctor/prefer-useReducer": "warn",
+
+        // ── React Doctor: performance ──────────────────────────────────────────
+        "react-doctor/effect-needs-cleanup": "warn",
+        "react-doctor/no-inline-prop-on-memo-component": "warn",
+        "react-doctor/no-usememo-simple-expression": "warn",
+        "react-doctor/rerender-memo-with-default-value": "warn",
+        "react-doctor/rerender-memo-before-early-return": "warn",
+        "react-doctor/rerender-transitions-scroll": "warn",
+        "react-doctor/rerender-derived-state-from-hook": "warn",
+        "react-doctor/prefer-use-sync-external-store": "warn",
+        "react-doctor/async-defer-await": "warn",
+        "react-doctor/rendering-animate-svg-wrapper": "warn",
+        "react-doctor/rendering-hoist-jsx": "warn",
+        "react-doctor/rendering-usetransition-loading": "warn",
+        "react-doctor/no-transition-all": "warn",
+        // SSR/hydration rules — disabled, project is a pure Vite SPA
+        "react-doctor/rendering-hydration-mismatch-time": "off",
+        "react-doctor/rendering-hydration-no-flicker": "off",
+        "react-doctor/rendering-script-defer-async": "off",
+
+        // ── React Doctor: architecture ─────────────────────────────────────────
+        // Nested component definitions lose state on parent re-render
+        "react-doctor/no-nested-component-definition": "error",
+        "react-doctor/no-render-in-render": "error",
+        // React 19 removed forwardRef and old useContext form
+        "react-doctor/no-react19-deprecated-apis": "error",
+        "react-doctor/no-react-dom-deprecated-apis": "error",
+        "react-doctor/no-legacy-class-lifecycles": "error",
+        "react-doctor/no-legacy-context-api": "error",
+        // defaultProps removed in React 19 — use ES6 defaults
+        "react-doctor/no-default-props": "error",
+        "react-doctor/no-giant-component": "warn",
+        "react-doctor/no-many-boolean-props": "warn",
+        "react-doctor/no-generic-handler-names": "warn",
+        "react-doctor/no-render-prop-children": "warn",
+        "react-doctor/react-compiler-destructure-method": "warn",
+
+        // ── React Doctor: correctness ──────────────────────────────────────────
+        "react-doctor/no-array-index-as-key": "warn",
+        // Numeric conditional render can unintentionally show "0"
+        "react-doctor/rendering-conditional-render": "error",
+        "react-doctor/no-uncontrolled-input": "error",
+        "react-doctor/no-polymorphic-children": "warn",
+        "react-doctor/rendering-svg-precision": "warn",
+        // React Hook Form handles form submission — flag direct preventDefault
+        "react-doctor/no-prevent-default": "warn",
+
+        // ── React Doctor: view transitions ────────────────────────────────────
+        "react-doctor/no-document-start-view-transition": "warn",
+        "react-doctor/no-flush-sync": "warn",
+
+        // ── React Doctor: client ───────────────────────────────────────────────
+        "react-doctor/client-passive-event-listeners": "warn",
+        "react-doctor/client-localstorage-no-version": "warn",
+
+        // ── React Doctor: animation & CSS ──────────────────────────────────────
+        "react-doctor/no-layout-property-animation": "warn",
+        "react-doctor/no-global-css-variable-animation": "warn",
+        "react-doctor/no-large-animated-blur": "warn",
+        "react-doctor/no-scale-from-zero": "warn",
+        "react-doctor/no-permanent-will-change": "warn",
+
+        // ── React Doctor: design ───────────────────────────────────────────────
+        "react-doctor/no-z-index-9999": "warn",
+        "react-doctor/no-inline-exhaustive-style": "warn",
+        "react-doctor/no-side-tab-border": "warn",
+        "react-doctor/no-pure-black-background": "warn",
+        "react-doctor/no-gradient-text": "warn",
+        "react-doctor/no-dark-mode-glow": "warn",
+        "react-doctor/no-justified-text": "warn",
+        "react-doctor/no-tiny-text": "warn",
+        "react-doctor/no-wide-letter-spacing": "warn",
+        "react-doctor/no-gray-on-colored-background": "warn",
+        "react-doctor/no-layout-transition-inline": "warn",
+        "react-doctor/no-inline-bounce-easing": "warn",
+        "react-doctor/no-long-transition-duration": "warn",
+        // Accessibility: removing focus outlines breaks keyboard navigation
+        "react-doctor/no-outline-none": "warn",
+        "react-doctor/no-disabled-zoom": "warn",
+
+        // ── React Doctor: React UI ─────────────────────────────────────────────
+        "react-doctor/design-no-bold-heading": "warn",
+        "react-doctor/design-no-redundant-padding-axes": "warn",
+        "react-doctor/design-no-redundant-size-axes": "warn",
+        "react-doctor/design-no-space-on-flex-children": "warn",
+        "react-doctor/design-no-em-dash-in-jsx-text": "warn",
+        "react-doctor/design-no-three-period-ellipsis": "warn",
+        "react-doctor/design-no-vague-button-label": "warn",
+
+        // ── React Doctor: TanStack Query ───────────────────────────────────────
+        // Creating QueryClient inside a component clears the cache on every render
+        "react-doctor/query-stable-query-client": "error",
+        "react-doctor/query-no-void-query-fn": "error",
+        // Mutating HTTP methods belong in useMutation, not useQuery
+        "react-doctor/query-no-usequery-for-mutation": "error",
+        "react-doctor/query-no-query-in-effect": "warn",
+        "react-doctor/query-mutation-missing-invalidation": "warn",
+        "react-doctor/query-no-rest-destructuring": "warn"
       }
     },
+
     // ── Test files: relax rules ───────────────────────────────────────────────
     {
       "files": [
@@ -276,21 +377,14 @@
       "globals": {
         "vi": "readonly"
       },
-      "plugins": ["typescript"],
       "env": {
         "jest": true
       }
     },
+
     // ── Config files: relax import rules ─────────────────────────────────────
     {
-      "files": [
-        "*.config.{js,mjs,ts}",
-        "**/vite.config.*",
-        "**/tailwind.config.*",
-        "**/eslint.config.*",
-        "**/playwright.config.*",
-        "**/astro.config.*"
-      ],
+      "files": ["**/*.config.{js,cjs,mjs,ts}"],
       "rules": {
         "import/named": "off",
         "typescript/consistent-type-imports": "off"

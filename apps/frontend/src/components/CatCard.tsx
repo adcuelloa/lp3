@@ -1,5 +1,4 @@
 import { Heart, HeartHandshake, Pencil } from "lucide-react";
-import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,10 +33,11 @@ interface CatCardProps {
   cat: Cat;
   index: number;
   onEdit: () => void;
+  onAdopt: () => void;
+  hasRequest?: boolean;
 }
 
-export default function CatCard({ cat, index, onEdit }: CatCardProps) {
-  const [adopted, setAdopted] = useState(false);
+export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = false }: CatCardProps) {
   const palette = PALETTES[cat.id % PALETTES.length];
   const personality = PERSONALITIES[cat.id % PERSONALITIES.length];
 
@@ -85,13 +85,13 @@ export default function CatCard({ cat, index, onEdit }: CatCardProps) {
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        {adopted ? (
+        {hasRequest ? (
           <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary bg-primary/10">
             <HeartHandshake size={16} className="animate-heart-pop" />
             ¡Solicitud enviada!
           </div>
         ) : (
-          <Button className="w-full rounded-xl" onClick={() => setAdopted(true)}>
+          <Button className="w-full rounded-xl" onClick={onAdopt}>
             <Heart data-icon="inline-start" />
             Adoptar
           </Button>

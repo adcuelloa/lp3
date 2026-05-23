@@ -7,12 +7,15 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, ClipboardList, Grid2x2, Plus } from "lucide-react";
 import { useState } from "react";
 import { createRoot } from "react-dom/client";
 
 import CatCard from "@/components/CatCard";
 import CatModal from "@/components/CatModal";
+import SolicitudModal from "@/components/SolicitudModal";
+import type { SolicitudFormData } from "@/components/SolicitudModal";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import http from "@/lib/http";
@@ -22,8 +25,26 @@ interface Cat {
   name: string;
 }
 
+interface Solicitud {
+  id: number;
+  catId: number;
+  nombre: string;
+  email: string;
+  telefono?: string | null;
+  mensaje?: string | null;
+  estado: string;
+  creadoEn: string;
+}
+
+type View = "cats" | "solicitudes";
+
 const fetchCats = async (): Promise<Cat[]> => {
   const { data } = await http.get<Cat[]>("/cat");
+  return Array.isArray(data) ? data : [];
+};
+
+const fetchSolicitudes = async (): Promise<Solicitud[]> => {
+  const { data } = await http.get<Solicitud[]>("/solicitud");
   return Array.isArray(data) ? data : [];
 };
 
@@ -32,13 +53,21 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const [view, setView] = useState<View>("cats");
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editCat, setEditCat] = useState<Cat | null>(null);
+  const [adoptingCat, setAdoptingCat] = useState<Cat | null>(null);
+  const [adoptedCatIds, setAdoptedCatIds] = useState<Set<number>>(new Set());
   const qc = useQueryClient();
 
-  const { data: cats = [], isLoading, isError } = useQuery({
+  const { data: cats = [], isLoading: catsLoading, isError: catsError } = useQuery({
     queryKey: ["cats"],
     queryFn: fetchCats,
+  });
+
+  const { data: solicitudes = [], isLoading: solLoading, isError: solError } = useQuery({
+    queryKey: ["solicitudes"],
+    queryFn: fetchSolicitudes,
   });
 
   const createMutation = useMutation({
@@ -58,14 +87,30 @@ function App() {
     },
   });
 
+  const solicitudMutation = useMutation({
+    mutationFn: (data: SolicitudFormData) =>
+      http.post<Solicitud>("/solicitud", data).then((r) => r.data),
+    onSuccess: (_, variables) => {
+      void qc.invalidateQueries({ queryKey: ["solicitudes"] });
+      setAdoptedCatIds((prev) => new Set(prev).add(variables.catId));
+      setAdoptingCat(null);
+    },
+  });
+
+  const catMap = new Map(cats.map((c) => [c.id, c]));
+
+  const estadoColor: Record<string, string> = {
+    pendiente: "bg-amber-100 text-amber-700",
+    aprobada: "bg-green-100 text-green-700",
+    rechazada: "bg-red-100 text-red-700",
+  };
+
   return (
     <div className="min-h-full">
       {/* ── Hero ── */}
       <header className="relative bg-espresso">
-        {/* Top terracotta accent bar */}
         <div className="h-[3px] w-full bg-primary" />
 
-        {/* Dot-grid background texture */}
         <div
           className="pointer-events-none absolute inset-0 select-none opacity-[0.035]"
           aria-hidden="true"
@@ -75,7 +120,6 @@ function App() {
           }}
         />
 
-        {/* Giant decorative letterform */}
         <div
           className="pointer-events-none absolute -right-12 bottom-8 select-none text-[28rem] font-bold italic leading-none text-white/[0.025]"
           aria-hidden="true"
@@ -84,7 +128,6 @@ function App() {
           G
         </div>
 
-        {/* Hero content */}
         <div className="relative z-10 mx-auto max-w-5xl px-6 pb-32 pt-10">
           {/* Top navigation row */}
           <div
@@ -111,9 +154,8 @@ function App() {
             </Button>
           </div>
 
-          {/* Two-column layout: title + stat panel */}
+          {/* Two-column layout */}
           <div className="grid grid-cols-1 items-end gap-10 md:grid-cols-[1fr_260px]">
-            {/* Left: title + tagline + main CTA */}
             <div>
               <h1
                 className="animate-fade-up mb-7 text-[5.5rem] font-bold italic leading-[0.85] text-white md:text-[7.5rem]"
@@ -147,7 +189,7 @@ function App() {
               </div>
             </div>
 
-            {/* Right: frosted stat card */}
+            {/* Stat card */}
             <div
               className="animate-fade-up hidden rounded-2xl border border-white/10 p-6 md:block"
               style={{
@@ -162,10 +204,10 @@ function App() {
                   className="mb-1 text-5xl font-bold text-white"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  {isLoading ? "·" : isError ? "—" : cats.length}
+                  {catsLoading ? "·" : catsError ? "—" : cats.length}
                 </div>
                 <div className="text-[10px] uppercase tracking-widest text-white/40">
-                  {!isLoading && !isError && cats.length === 1
+                  {!catsLoading && !catsError && cats.length === 1
                     ? "Gatito disponible"
                     : "Gatitos disponibles"}
                 </div>
@@ -179,7 +221,6 @@ function App() {
           </div>
         </div>
 
-        {/* Asymmetric wave transition */}
         <svg
           className="absolute bottom-0 left-0 block w-full"
           viewBox="0 0 1440 80"
@@ -194,83 +235,187 @@ function App() {
 
       {/* ── Main Content ── */}
       <main className="mx-auto max-w-5xl px-6 py-12">
-        {/* Section header */}
-        <div className="mb-8 flex items-center gap-3">
-          <div className="h-[1.5px] w-5 bg-primary" />
-          <h2
-            className="text-2xl font-bold text-foreground"
-            style={{ fontFamily: "var(--font-display)" }}
+
+        {/* ── Tab navigation ── */}
+        <div className="mb-8 flex items-center gap-1 rounded-xl border border-border bg-muted/40 p-1 w-fit">
+          <button
+            onClick={() => setView("cats")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+              view === "cats"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            Disponibles para adoptar
-          </h2>
-          {!isLoading && !isError && (
-            <>
-              <div className="h-px flex-1 bg-border" />
-              <span className="text-sm font-light text-muted-foreground">
-                {cats.length} {cats.length === 1 ? "gatito" : "gatitos"}
+            <Grid2x2 size={15} />
+            Gatitos disponibles
+            {!catsLoading && !catsError && (
+              <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary leading-none">
+                {cats.length}
               </span>
-            </>
-          )}
+            )}
+          </button>
+          <button
+            onClick={() => setView("solicitudes")}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
+              view === "solicitudes"
+                ? "bg-background text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <ClipboardList size={15} />
+            Solicitudes
+            {!solLoading && !solError && solicitudes.length > 0 && (
+              <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary leading-none">
+                {solicitudes.length}
+              </span>
+            )}
+          </button>
         </div>
 
-        {/* Loading skeletons */}
-        {isLoading && (
-          <div
-            className="grid gap-5"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-56 rounded-2xl" />
-            ))}
-          </div>
+        {/* ── Vista: Gatitos ── */}
+        {view === "cats" && (
+          <>
+            {catsLoading && (
+              <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Skeleton key={i} className="h-56 rounded-2xl" />
+                ))}
+              </div>
+            )}
+
+            {catsError && (
+              <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card py-20">
+                <AlertCircle size={28} className="text-muted-foreground" />
+                <p className="text-base font-semibold text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                  No se pudo conectar con la API
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Asegúrate de que el servidor esté corriendo en el puerto 3000.
+                </p>
+              </div>
+            )}
+
+            {!catsLoading && !catsError && cats.length === 0 && (
+              <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card py-24">
+                <span className="animate-float text-5xl">🏠</span>
+                <p className="text-xl font-bold text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                  ¡El refugio está vacío!
+                </p>
+                <p className="mb-1 text-sm text-muted-foreground">
+                  Registra el primer gato disponible para adopción.
+                </p>
+                <Button size="sm" className="rounded-full" onClick={() => setIsAddOpen(true)}>
+                  <Plus data-icon="inline-start" />
+                  Registrar Gato
+                </Button>
+              </div>
+            )}
+
+            {!catsLoading && !catsError && cats.length > 0 && (
+              <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}>
+                {cats.map((cat, index) => (
+                  <CatCard
+                    key={cat.id}
+                    cat={cat}
+                    index={index}
+                    onEdit={() => setEditCat(cat)}
+                    onAdopt={() => setAdoptingCat(cat)}
+                    hasRequest={adoptedCatIds.has(cat.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
 
-        {/* Error */}
-        {isError && (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card py-20">
-            <AlertCircle size={28} className="text-muted-foreground" />
-            <p
-              className="text-base font-semibold text-foreground"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              No se pudo conectar con la API
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Asegúrate de que el servidor esté corriendo en el puerto 3000.
-            </p>
-          </div>
-        )}
+        {/* ── Vista: Solicitudes ── */}
+        {view === "solicitudes" && (
+          <>
+            {solLoading && (
+              <div className="flex flex-col gap-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-24 rounded-2xl" />
+                ))}
+              </div>
+            )}
 
-        {/* Empty state */}
-        {!isLoading && !isError && cats.length === 0 && (
-          <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card py-24">
-            <span className="animate-float text-5xl">🏠</span>
-            <p
-              className="text-xl font-bold text-foreground"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              ¡El refugio está vacío!
-            </p>
-            <p className="mb-1 text-sm text-muted-foreground">
-              Registra el primer gato disponible para adopción.
-            </p>
-            <Button size="sm" className="rounded-full" onClick={() => setIsAddOpen(true)}>
-              <Plus data-icon="inline-start" />
-              Registrar Gato
-            </Button>
-          </div>
-        )}
+            {solError && (
+              <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card py-20">
+                <AlertCircle size={28} className="text-muted-foreground" />
+                <p className="text-base font-semibold text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                  No se pudieron cargar las solicitudes
+                </p>
+              </div>
+            )}
 
-        {/* Cat grid */}
-        {!isLoading && !isError && cats.length > 0 && (
-          <div
-            className="grid gap-5"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}
-          >
-            {cats.map((cat, index) => (
-              <CatCard key={cat.id} cat={cat} index={index} onEdit={() => setEditCat(cat)} />
-            ))}
-          </div>
+            {!solLoading && !solError && solicitudes.length === 0 && (
+              <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-border bg-card py-24">
+                <span className="text-5xl">📋</span>
+                <p className="text-xl font-bold text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                  Sin solicitudes aún
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Cuando alguien quiera adoptar un gatito, aparecerá aquí.
+                </p>
+                <Button size="sm" variant="outline" className="rounded-full" onClick={() => setView("cats")}>
+                  Ver gatitos disponibles
+                </Button>
+              </div>
+            )}
+
+            {!solLoading && !solError && solicitudes.length > 0 && (
+              <div className="flex flex-col gap-3">
+                {solicitudes.map((sol) => {
+                  const cat = catMap.get(sol.catId);
+                  const colorClass = estadoColor[sol.estado] ?? "bg-gray-100 text-gray-600";
+                  const fecha = new Date(sol.creadoEn).toLocaleDateString("es-CO", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  });
+                  return (
+                    <div
+                      key={sol.id}
+                      className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 sm:flex-row sm:items-start sm:gap-5"
+                    >
+                      {/* Cat info */}
+                      <div className="flex shrink-0 items-center gap-3">
+                        <span className="text-3xl leading-none">🐱</span>
+                        <div>
+                          <p className="text-xs uppercase tracking-wider text-muted-foreground">Gato</p>
+                          <p className="font-bold text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                            {cat?.name ?? `#${sol.catId}`}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="hidden w-px self-stretch bg-border sm:block" />
+
+                      {/* Solicitante info */}
+                      <div className="flex flex-1 flex-col gap-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-semibold text-foreground">{sol.nombre}</p>
+                          <Badge className={`text-[10px] uppercase tracking-wider border-0 ${colorClass}`}>
+                            {sol.estado}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{sol.email}</p>
+                        {sol.telefono && (
+                          <p className="text-sm text-muted-foreground">{sol.telefono}</p>
+                        )}
+                        {sol.mensaje && (
+                          <p className="mt-1 text-sm text-foreground/70 italic">&ldquo;{sol.mensaje}&rdquo;</p>
+                        )}
+                      </div>
+
+                      {/* Date */}
+                      <p className="shrink-0 text-xs text-muted-foreground">{fecha}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
       </main>
 
@@ -286,14 +431,21 @@ function App() {
 
       <CatModal
         open={editCat !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditCat(null);
-        }}
+        onOpenChange={(open) => { if (!open) setEditCat(null); }}
         title="Editar nombre"
         description="Actualiza el nombre de este compañero felino."
         initialValue={editCat?.name ?? ""}
         onSubmit={(name) => editCat && updateMutation.mutate({ id: editCat.id, name })}
         isPending={updateMutation.isPending}
+      />
+
+      <SolicitudModal
+        open={adoptingCat !== null}
+        onOpenChange={(open) => { if (!open) setAdoptingCat(null); }}
+        catName={adoptingCat?.name ?? ""}
+        catId={adoptingCat?.id ?? 0}
+        onSubmit={(data) => solicitudMutation.mutate(data)}
+        isPending={solicitudMutation.isPending}
       />
     </div>
   );
