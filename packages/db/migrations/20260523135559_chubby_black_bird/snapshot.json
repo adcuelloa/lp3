@@ -1,0 +1,275 @@
+{
+  "version": "8",
+  "dialect": "postgres",
+  "id": "1467989b-a39e-4789-9427-34c20f425a16",
+  "prevIds": [
+    "10249178-fded-4eb3-9897-c0c872da109e"
+  ],
+  "ddl": [
+    {
+      "name": "core",
+      "entityType": "schemas"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "cat",
+      "entityType": "tables",
+      "schema": "core"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "solicitud",
+      "entityType": "tables",
+      "schema": "core"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": {
+        "type": "always",
+        "name": "cat_id_seq",
+        "increment": "1",
+        "startWith": "1",
+        "minValue": "1",
+        "maxValue": "2147483647",
+        "cache": 1,
+        "cycle": false
+      },
+      "name": "id",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "cat"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "name",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "cat"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": {
+        "type": "always",
+        "name": "solicitud_id_seq",
+        "increment": "1",
+        "startWith": "1",
+        "minValue": "1",
+        "maxValue": "2147483647",
+        "cache": 1,
+        "cycle": false
+      },
+      "name": "id",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "cat_id",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "nombre",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "email",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "telefono",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "mensaje",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'pendiente'",
+      "generated": null,
+      "identity": null,
+      "name": "estado",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "creado_en",
+      "entityType": "columns",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "name",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "cat_name_idx",
+      "entityType": "indexes",
+      "schema": "core",
+      "table": "cat"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "cat_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "solicitud_cat_id_idx",
+      "entityType": "indexes",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "estado",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "solicitud_estado_idx",
+      "entityType": "indexes",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "cat_id"
+      ],
+      "schemaTo": "core",
+      "tableTo": "cat",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "name": "solicitud_cat_id_cat_id_fkey",
+      "entityType": "fks",
+      "schema": "core",
+      "table": "solicitud"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "cat_pkey",
+      "schema": "core",
+      "table": "cat",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "solicitud_pkey",
+      "schema": "core",
+      "table": "solicitud",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}
