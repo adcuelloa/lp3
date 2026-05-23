@@ -133,14 +133,7 @@
     // ── React Doctor: JS performance & bundle size (frontend only) ───────────
     // Scoped to frontend apps + UI package
     {
-      "files": [
-        "apps/academy/**/*.{ts,tsx}",
-        "apps/panel/**/*.{ts,tsx}",
-        "apps/accounts/**/*.{ts,tsx}",
-        "apps/myaccount/**/*.{ts,tsx}",
-        "apps/landing/**/*.{ts,tsx}",
-        "packages/ui/**/*.{ts,tsx}"
-      ],
+      "files": ["apps/frontend/**/*.{ts,tsx}"],
       "rules": {
         // Client secrets must never be hardcoded in frontend code
         "react-doctor/no-secrets-in-client-code": "error",
@@ -177,7 +170,7 @@
 
     // ── React + JSX A11y: for React apps and UI package ──────────────────────
     {
-      "files": ["apps/**/*.{tsx,jsx}", "packages/ui/src/**/*.{tsx,jsx}"],
+      "files": ["apps/**/*.{tsx,jsx}"],
       "plugins": ["react", "jsx-a11y"],
       "rules": {
         // React recommended rules
