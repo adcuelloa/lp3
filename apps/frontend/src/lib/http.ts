@@ -1,7 +1,7 @@
-import axios from "axios";
+import { create } from "axios";
 
-const http = axios.create({
-  baseURL: import.meta.env.VITE_API_URL as string,
+const http = create({
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export default http;
