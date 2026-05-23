@@ -106,6 +106,9 @@
         "typescript/require-array-sort-compare": "error",
         "typescript/unbound-method": "error",
 
+        // NestJS modules are intentionally empty classes decorated with @Module
+        "typescript/no-extraneous-class": ["warn", { "allowWithDecorator": true }],
+
         // ── TS best practices ────────────────────────────────────────────────
         // Enforce import type for type-only imports everywhere
         "typescript/consistent-type-imports": [

@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,50 @@ interface CatModalProps {
   isPending: boolean;
 }
 
+interface CatFormProps {
+  initialValue: string;
+  onSubmit: (name: string) => void;
+  onCancel: () => void;
+  isPending: boolean;
+}
+
+function CatForm({ initialValue, onSubmit, onCancel, isPending }: CatFormProps) {
+  const [name, setName] = useState(initialValue);
+
+  function handleSubmit(e: { preventDefault(): void }) {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (trimmed) onSubmit(trimmed);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-1">
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="cat-name-input">Nombre del gato</Label>
+        <Input
+          id="cat-name-input"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ej: Whiskers, Luna, Mochi…"
+          required
+          className="h-11"
+        />
+      </div>
+
+      <DialogFooter className="gap-2 sm:gap-2">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancelar
+        </Button>
+        <Button type="submit" disabled={isPending || !name.trim()}>
+          {isPending && <Loader2 data-icon="inline-start" className="animate-spin" />}
+          {isPending ? "Guardando…" : "Guardar"}
+        </Button>
+      </DialogFooter>
+    </form>
+  );
+}
+
 export default function CatModal({
   open,
   onOpenChange,
@@ -32,18 +76,6 @@ export default function CatModal({
   onSubmit,
   isPending,
 }: CatModalProps) {
-  const [name, setName] = useState(initialValue);
-
-  useEffect(() => {
-    setName(initialValue);
-  }, [initialValue, open]);
-
-  function handleSubmit(e: { preventDefault(): void }) {
-    e.preventDefault();
-    const trimmed = name.trim();
-    if (trimmed) onSubmit(trimmed);
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-2xl">
@@ -60,34 +92,13 @@ export default function CatModal({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-1">
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="cat-name-input">Nombre del gato</Label>
-            <Input
-              id="cat-name-input"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: Whiskers, Luna, Mochi…"
-              required
-              className="h-11"
-            />
-          </div>
-
-          <DialogFooter className="gap-2 sm:gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" disabled={isPending || !name.trim()}>
-              {isPending && <Loader2 data-icon="inline-start" className="animate-spin" />}
-              {isPending ? "Guardando…" : "Guardar"}
-            </Button>
-          </DialogFooter>
-        </form>
+        <CatForm
+          key={`${String(open)}-${initialValue}`}
+          initialValue={initialValue}
+          onSubmit={onSubmit}
+          onCancel={() => onOpenChange(false)}
+          isPending={isPending}
+        />
       </DialogContent>
     </Dialog>
   );

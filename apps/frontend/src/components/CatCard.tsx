@@ -73,7 +73,7 @@ export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = fals
         {/* Name + personality */}
         <div>
           <h3
-            className="text-2xl font-bold leading-tight text-foreground"
+            className="text-2xl font-semibold leading-tight text-foreground"
             style={{ fontFamily: "var(--font-display)" }}
           >
             {cat.name}

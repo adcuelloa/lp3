@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 
 import { defineConfig } from "drizzle-kit";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const dir = dirname(filename);
 
-const envPath = resolve(__dirname, "../../env/backend.env");
+const envPath = resolve(dir, "../../env/backend.env");
 
 try {
   process.loadEnvFile(envPath);

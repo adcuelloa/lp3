@@ -64,6 +64,7 @@ function wrapLogFn(fn: PinoLogger["info"]): (msgOrObj: unknown, ...rest: unknown
       if (meta instanceof Error) {
         fn({ err: meta }, msgOrObj);
       } else {
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- meta is a non-null object verified by typeof/instanceof checks above
         fn(meta as Record<string, unknown>, msgOrObj);
       }
       return;
@@ -72,6 +73,7 @@ function wrapLogFn(fn: PinoLogger["info"]): (msgOrObj: unknown, ...rest: unknown
     if (typeof msgOrObj === "string") {
       fn(msgOrObj);
     } else {
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Pino-native call: msgOrObj is a non-string object and rest matches Pino's signature
       fn(msgOrObj as Record<string, unknown>, ...(rest as [string, ...unknown[]]));
     }
   };

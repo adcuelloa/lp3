@@ -36,7 +36,7 @@
     "@nestjs/swagger": "11.4.4",
     "@project/db": "workspace:*",
     "argon2": "0.44.0",
-    "drizzle-orm": "1.0.0-rc.1",
+    "drizzle-orm": "1.0.0-rc.3",
     "fastify": "5.8.5",
     "jsonwebtoken": "9.0.3",
     "pino": "10.3.1",

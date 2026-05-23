@@ -61,8 +61,8 @@ export default function SolicitudModal({
       catId,
       nombre: nombre.trim(),
       email: email.trim(),
-      telefono: telefono.trim() || undefined,
-      mensaje: mensaje.trim() || undefined,
+      ...(telefono.trim() ? { telefono: telefono.trim() } : {}),
+      ...(mensaje.trim() ? { mensaje: mensaje.trim() } : {}),
     });
   }
 
@@ -127,6 +127,7 @@ export default function SolicitudModal({
             <Label htmlFor="sol-mensaje">Mensaje</Label>
             <textarea
               id="sol-mensaje"
+              aria-label="Mensaje"
               value={mensaje}
               onChange={(e) => setMensaje(e.target.value)}
               placeholder="¿Por qué deseas adoptar a este gatito?"
