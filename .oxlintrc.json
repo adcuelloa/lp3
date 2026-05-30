@@ -335,7 +335,6 @@
         "react-doctor/no-disabled-zoom": "warn",
 
         // ── React Doctor: React UI ─────────────────────────────────────────────
-        "react-doctor/design-no-bold-heading": "warn",
         "react-doctor/design-no-redundant-padding-axes": "warn",
         "react-doctor/design-no-redundant-size-axes": "warn",
         "react-doctor/design-no-space-on-flex-children": "warn",

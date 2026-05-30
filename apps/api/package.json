@@ -30,9 +30,9 @@
     "@fastify/multipart": "10.0.0",
     "@fastify/rate-limit": "10.3.0",
     "@fastify/static": "9.1.3",
-    "@nestjs/common": "11.1.23",
-    "@nestjs/core": "11.1.23",
-    "@nestjs/platform-fastify": "11.1.23",
+    "@nestjs/common": "11.1.24",
+    "@nestjs/core": "11.1.24",
+    "@nestjs/platform-fastify": "11.1.24",
     "@nestjs/swagger": "11.4.4",
     "@project/db": "workspace:*",
     "argon2": "0.44.0",
@@ -45,7 +45,7 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@nestjs/testing": "11.1.23",
+    "@nestjs/testing": "11.1.24",
     "@types/jsonwebtoken": "9.0.10",
     "@types/node": "catalog:",
     "@types/pg": "8.20.0",
