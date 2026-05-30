@@ -39,7 +39,7 @@ export default function Footer() {
             className="mt-4 text-[10px] tracking-wider text-white/20 uppercase"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Feline Adoption Center · 2025
+            Feline Adoption Center · 2026
           </p>
         </div>
       </div>

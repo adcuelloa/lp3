@@ -59,7 +59,7 @@ export default function HeroHeader({
               className="text-brand-light text-[10px] font-semibold tracking-[0.4em] uppercase"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              Feline Adoption Center · Est. 2025
+              Feline Adoption Center
             </span>
           </div>
 

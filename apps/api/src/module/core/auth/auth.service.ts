@@ -89,7 +89,11 @@ export class AuthService {
   }
 
   logout(reply: FastifyReply) {
-    void reply.clearCookie(COOKIE, { path: "/" });
+    void reply.clearCookie(COOKIE, {
+      path: "/",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+    });
   }
 
   verifyToken(request: FastifyRequest): SessionPayload | null {
