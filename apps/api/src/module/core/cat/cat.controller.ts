@@ -1,92 +1,75 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import type { FastifyRequest } from "fastify";
 
+import { Roles } from "../auth/decorators/roles.decorator";
+import type { SessionPayload } from "../auth/auth.service";
+import { CookieAuthGuard } from "../auth/guards/cookie-auth.guard";
+import { RolesGuard } from "../auth/guards/roles.guard";
 import { CatService } from "./cat.service";
 import { CatDto } from "./dto/cat.dto";
 import { CreateCatDto } from "./dto/create-cat.dto";
 
-@ApiTags("Gatos")
+@ApiTags("Cats")
 @Controller("cat")
 export class CatController {
-  constructor(@Inject(CatService) private readonly catsService: CatService) {}
+  constructor(@Inject(CatService) private readonly catService: CatService) {}
 
   @Get()
-  @ApiOperation({
-    summary: "Obtener todos los gatos",
-    description: "Retorna una lista de todos los gatos registrados en la base de datos",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Lista de gatos obtenida exitosamente",
-    type: [CatDto],
-  })
-  @ApiResponse({
-    status: 500,
-    description: "Error interno del servidor",
-  })
+  @ApiOperation({ summary: "Get all cats (public)" })
+  @ApiResponse({ status: 200, type: [CatDto] })
   findAll() {
-    return this.catsService.findAll();
+    return this.catService.findAll();
   }
 
   @Post()
-  @ApiOperation({
-    summary: "Crear un nuevo gato",
-    description: "Crea un nuevo registro de gato en la base de datos",
-  })
-  @ApiBody({
-    type: CreateCatDto,
-    description: "Datos del gato a crear",
-  })
-  @ApiResponse({
-    status: 201,
-    description: "Gato creado exitosamente",
-    type: CatDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: "Datos inválidos en la solicitud",
-  })
-  @ApiResponse({
-    status: 500,
-    description: "Error interno del servidor",
-  })
-  create(@Body() createCatDto: CreateCatDto) {
-    return this.catsService.create(createCatDto.name);
+  @UseGuards(CookieAuthGuard, RolesGuard)
+  @Roles("admin", "member")
+  @ApiOperation({ summary: "Register a new cat (admin or member)" })
+  @ApiBody({ type: CreateCatDto })
+  @ApiResponse({ status: 201, type: CatDto })
+  @ApiResponse({ status: 401 })
+  @ApiResponse({ status: 403 })
+  create(
+    @Body() dto: CreateCatDto,
+    @Req() req: FastifyRequest & { user: SessionPayload },
+  ) {
+    return this.catService.create(dto, req.user.sub);
   }
 
   @Patch(":id")
-  @ApiOperation({
-    summary: "Actualizar un gato",
-    description: "Actualiza el registro de un gato específico por su ID",
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "ID único del gato a actualizar",
-    example: 1,
-  })
-  @ApiBody({
-    type: CreateCatDto,
-    description: "Datos actualizados del gato",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Gato actualizado exitosamente",
-    type: CatDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: "Datos inválidos en la solicitud",
-  })
-  @ApiResponse({
-    status: 404,
-    description: "Gato no encontrado",
-  })
-  @ApiResponse({
-    status: 500,
-    description: "Error interno del servidor",
-  })
-  update(@Param("id") id: number, @Body() createCatDto: CreateCatDto) {
-    return this.catsService.update(id, createCatDto.name);
+  @UseGuards(CookieAuthGuard, RolesGuard)
+  @Roles("admin", "member")
+  @ApiOperation({ summary: "Update a cat (admin or member)" })
+  @ApiParam({ name: "id", type: Number })
+  @ApiBody({ type: CreateCatDto })
+  @ApiResponse({ status: 200, type: CatDto })
+  @ApiResponse({ status: 401 })
+  @ApiResponse({ status: 403 })
+  update(@Param("id") id: number, @Body() dto: CreateCatDto) {
+    return this.catService.update(id, dto);
+  }
+
+  @Delete(":id")
+  @UseGuards(CookieAuthGuard, RolesGuard)
+  @Roles("admin")
+  @ApiOperation({ summary: "Delete a cat (admin only)" })
+  @ApiParam({ name: "id", type: Number })
+  @ApiResponse({ status: 200, type: CatDto })
+  @ApiResponse({ status: 401 })
+  @ApiResponse({ status: 403 })
+  remove(@Param("id") id: number) {
+    return this.catService.remove(id);
   }
 }

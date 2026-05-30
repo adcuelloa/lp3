@@ -7,6 +7,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 interface Cat {
   id: number;
   name: string;
+  color?: string | null;
+  gender?: string;
+  ageMonths?: number | null;
+  isAvailable?: boolean;
 }
 
 const PALETTES = [
@@ -18,28 +22,36 @@ const PALETTES = [
   { bg: "#edf4e2", border: "#c8e0b0", emoji: "🐈‍⬛" },
 ];
 
-const PERSONALITIES = [
-  "Aventurero",
-  "Muy cariñoso",
-  "Juguetón",
-  "Tranquilo",
-  "Curioso",
-  "Independiente",
-  "Sociable",
-  "Misterioso",
-];
-
 interface CatCardProps {
   cat: Cat;
   index: number;
   onEdit: () => void;
   onAdopt: () => void;
   hasRequest?: boolean;
+  showEdit?: boolean;
 }
 
-export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = false }: CatCardProps) {
+export default function CatCard({
+  cat,
+  index,
+  onEdit,
+  onAdopt,
+  hasRequest = false,
+  showEdit = false,
+}: CatCardProps) {
   const palette = PALETTES[cat.id % PALETTES.length];
-  const personality = PERSONALITIES[cat.id % PERSONALITIES.length];
+
+  const ageLabel =
+    cat.ageMonths != null
+      ? cat.ageMonths < 12
+        ? `${cat.ageMonths}mo`
+        : `${Math.floor(cat.ageMonths / 12)}yr`
+      : null;
+
+  const genderLabel =
+    cat.gender === "male" ? "♂ Male" : cat.gender === "female" ? "♀ Female" : null;
+
+  const subtitle = [genderLabel, ageLabel, cat.color].filter(Boolean).join(" · ");
 
   return (
     <Card
@@ -51,7 +63,6 @@ export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = fals
       }}
     >
       <CardContent className="flex flex-col gap-4 p-6">
-        {/* Top row: emoji + edit */}
         <div className="flex items-start justify-between">
           <span
             className="text-5xl leading-none select-none"
@@ -59,18 +70,19 @@ export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = fals
           >
             {palette.emoji}
           </span>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={onEdit}
-            aria-label={`Editar nombre de ${cat.name}`}
-            className="text-muted-foreground"
-          >
-            <Pencil data-icon />
-          </Button>
+          {showEdit && (
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={onEdit}
+              aria-label={`Edit ${cat.name}`}
+              className="text-muted-foreground"
+            >
+              <Pencil data-icon />
+            </Button>
+          )}
         </div>
 
-        {/* Name + personality */}
         <div>
           <h3
             className="text-2xl font-semibold leading-tight text-foreground"
@@ -78,9 +90,11 @@ export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = fals
           >
             {cat.name}
           </h3>
-          <Badge variant="secondary" className="mt-2 text-xs uppercase tracking-widest">
-            {personality}
-          </Badge>
+          {subtitle && (
+            <Badge variant="secondary" className="mt-2 text-xs uppercase tracking-widest">
+              {subtitle}
+            </Badge>
+          )}
         </div>
       </CardContent>
 
@@ -88,12 +102,12 @@ export default function CatCard({ cat, index, onEdit, onAdopt, hasRequest = fals
         {hasRequest ? (
           <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary bg-primary/10">
             <HeartHandshake size={16} className="animate-heart-pop" />
-            ¡Solicitud enviada!
+            Application sent!
           </div>
         ) : (
           <Button className="w-full rounded-xl" onClick={onAdopt}>
             <Heart data-icon="inline-start" />
-            Adoptar
+            Adopt
           </Button>
         )}
       </CardFooter>

@@ -42,13 +42,13 @@ function CatForm({ initialValue, onSubmit, onCancel, isPending }: CatFormProps) 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5 mt-1">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="cat-name-input">Nombre del gato</Label>
+        <Label htmlFor="cat-name-input">Cat name</Label>
         <Input
           id="cat-name-input"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Ej: Whiskers, Luna, Mochi…"
+          placeholder="e.g. Whiskers, Luna, Mochi…"
           required
           className="h-11"
         />
@@ -56,11 +56,11 @@ function CatForm({ initialValue, onSubmit, onCancel, isPending }: CatFormProps) 
 
       <DialogFooter className="gap-2 sm:gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>
-          Cancelar
+          Cancel
         </Button>
         <Button type="submit" disabled={isPending || !name.trim()}>
           {isPending && <Loader2 data-icon="inline-start" className="animate-spin" />}
-          {isPending ? "Guardando…" : "Guardar"}
+          {isPending ? "Saving…" : "Save"}
         </Button>
       </DialogFooter>
     </form>
@@ -71,7 +71,7 @@ export default function CatModal({
   open,
   onOpenChange,
   title,
-  description = "Ingresa el nombre del compañero felino.",
+  description = "Enter the name of the feline companion.",
   initialValue = "",
   onSubmit,
   isPending,

@@ -13,41 +13,41 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export interface SolicitudFormData {
+export interface ApplicationFormData {
   catId: number;
-  nombre: string;
-  email: string;
-  telefono?: string;
-  mensaje?: string;
+  applicantName: string;
+  applicantEmail: string;
+  phone?: string;
+  message?: string;
 }
 
-interface SolicitudModalProps {
+interface ApplicationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   catName: string;
   catId: number;
-  onSubmit: (data: SolicitudFormData) => void;
+  onSubmit: (data: ApplicationFormData) => void;
   isPending: boolean;
 }
 
-export default function SolicitudModal({
+export default function ApplicationModal({
   open,
   onOpenChange,
   catName,
   catId,
   onSubmit,
   isPending,
-}: SolicitudModalProps) {
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [mensaje, setMensaje] = useState("");
+}: ApplicationModalProps) {
+  const [applicantName, setApplicantName] = useState("");
+  const [applicantEmail, setApplicantEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
 
   function reset() {
-    setNombre("");
-    setEmail("");
-    setTelefono("");
-    setMensaje("");
+    setApplicantName("");
+    setApplicantEmail("");
+    setPhone("");
+    setMessage("");
   }
 
   function handleOpenChange(next: boolean) {
@@ -59,14 +59,14 @@ export default function SolicitudModal({
     e.preventDefault();
     onSubmit({
       catId,
-      nombre: nombre.trim(),
-      email: email.trim(),
-      ...(telefono.trim() ? { telefono: telefono.trim() } : {}),
-      ...(mensaje.trim() ? { mensaje: mensaje.trim() } : {}),
+      applicantName: applicantName.trim(),
+      applicantEmail: applicantEmail.trim(),
+      ...(phone.trim() ? { phone: phone.trim() } : {}),
+      ...(message.trim() ? { message: message.trim() } : {}),
     });
   }
 
-  const canSubmit = nombre.trim().length > 0 && email.trim().length > 0;
+  const canSubmit = applicantName.trim().length > 0 && applicantEmail.trim().length > 0;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -79,58 +79,58 @@ export default function SolicitudModal({
             🐾 La Gatería
           </p>
           <DialogTitle style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem" }}>
-            Adoptar a {catName}
+            Adopt {catName}
           </DialogTitle>
           <DialogDescription>
-            Completa tu información y te contactaremos a la brevedad.
+            Fill in your details and we will contact you shortly.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="sol-nombre">Nombre completo *</Label>
+            <Label htmlFor="app-name">Full name *</Label>
             <Input
-              id="sol-nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Ej: Ana García"
+              id="app-name"
+              value={applicantName}
+              onChange={(e) => setApplicantName(e.target.value)}
+              placeholder="e.g. Ana García"
               required
               className="h-11"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="sol-email">Correo electrónico *</Label>
+            <Label htmlFor="app-email">Email address *</Label>
             <Input
-              id="sol-email"
+              id="app-email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Ej: ana@email.com"
+              value={applicantEmail}
+              onChange={(e) => setApplicantEmail(e.target.value)}
+              placeholder="e.g. ana@email.com"
               required
               className="h-11"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="sol-telefono">Teléfono</Label>
+            <Label htmlFor="app-phone">Phone number</Label>
             <Input
-              id="sol-telefono"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-              placeholder="Ej: +57 300 000 0000"
+              id="app-phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="e.g. +57 300 000 0000"
               className="h-11"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="sol-mensaje">Mensaje</Label>
+            <Label htmlFor="app-message">Message</Label>
             <textarea
-              id="sol-mensaje"
-              aria-label="Mensaje"
-              value={mensaje}
-              onChange={(e) => setMensaje(e.target.value)}
-              placeholder="¿Por qué deseas adoptar a este gatito?"
+              id="app-message"
+              aria-label="Message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Why would you like to adopt this cat?"
               rows={3}
               className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-none"
             />
@@ -138,11 +138,11 @@ export default function SolicitudModal({
 
           <DialogFooter className="gap-2 sm:gap-2">
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit" disabled={isPending || !canSubmit}>
               {isPending && <Loader2 data-icon="inline-start" className="animate-spin" />}
-              {isPending ? "Enviando…" : "Enviar solicitud"}
+              {isPending ? "Sending…" : "Submit application"}
             </Button>
           </DialogFooter>
         </form>

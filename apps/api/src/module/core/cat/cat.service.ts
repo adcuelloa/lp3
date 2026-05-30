@@ -5,33 +5,52 @@ import { cat } from "@project/db";
 
 import { db } from "@/lib/drizzle";
 
+import type { CreateCatDto } from "./dto/create-cat.dto";
+
 @Injectable()
 export class CatService {
-  /**
-   * find all cats
-   * @returns an array of cats
-   */
-  async findAll() {
+  findAll() {
     return db.select().from(cat);
   }
 
-  /**
-   * create a new cat
-   * @param name the name of the cat
-   * @returns the created cat
-   */
-  async create(name: string) {
-    const [createdCat] = await db.insert(cat).values({ name }).returning();
-    return createdCat;
+  async create(dto: CreateCatDto, registeredById?: number) {
+    const [created] = await db
+      .insert(cat)
+      .values({
+        name: dto.name,
+        breedId: dto.breedId,
+        color: dto.color,
+        gender: dto.gender,
+        ageMonths: dto.ageMonths,
+        weightKg: dto.weightKg,
+        description: dto.description,
+        isAvailable: dto.isAvailable,
+        registeredById,
+      })
+      .returning();
+    return created;
   }
 
-  /**
-   * update a cat by id
-   * @param id the id of the cat to update
-   * @returns the updated cat
-   */
-  async update(id: number, name: string) {
-    const [updatedCat] = await db.update(cat).set({ name }).where(eq(cat.id, id)).returning();
-    return updatedCat;
+  async update(id: number, dto: CreateCatDto) {
+    const [updated] = await db
+      .update(cat)
+      .set({
+        name: dto.name,
+        breedId: dto.breedId,
+        color: dto.color,
+        gender: dto.gender,
+        ageMonths: dto.ageMonths,
+        weightKg: dto.weightKg,
+        description: dto.description,
+        isAvailable: dto.isAvailable,
+      })
+      .where(eq(cat.id, id))
+      .returning();
+    return updated;
+  }
+
+  async remove(id: number) {
+    const [removed] = await db.delete(cat).where(eq(cat.id, id)).returning();
+    return removed;
   }
 }
