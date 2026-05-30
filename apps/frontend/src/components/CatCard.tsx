@@ -91,13 +91,13 @@ export default function CatCard({
 
         <div>
           <h3
-            className="text-2xl font-semibold leading-tight text-foreground"
+            className="text-foreground text-2xl leading-tight font-semibold"
             style={{ fontFamily: "var(--font-display)" }}
           >
             {cat.name}
           </h3>
           {subtitle && (
-            <Badge variant="secondary" className="mt-2 text-xs uppercase tracking-widest">
+            <Badge variant="secondary" className="mt-2 text-xs tracking-widest uppercase">
               {subtitle}
             </Badge>
           )}
@@ -106,11 +106,11 @@ export default function CatCard({
 
       <CardFooter className="p-6 pt-0">
         {isAdopted ? (
-          <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50">
+          <div className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-50 py-2.5 text-sm font-semibold text-emerald-700">
             ❤️ Adopted
           </div>
         ) : hasRequest ? (
-          <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary bg-primary/10">
+          <div className="text-primary bg-primary/10 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold">
             <HeartHandshake size={16} className="animate-heart-pop" />
             Application sent!
           </div>

@@ -12,7 +12,9 @@ import { UpdateApplicationStatusDto } from "./dto/update-application-status.dto"
 @ApiTags("Applications")
 @Controller("application")
 export class ApplicationController {
-  constructor(@Inject(ApplicationService) private readonly applicationService: ApplicationService) {}
+  constructor(
+    @Inject(ApplicationService) private readonly applicationService: ApplicationService
+  ) {}
 
   @Get()
   @UseGuards(CookieAuthGuard, RolesGuard)

@@ -82,11 +82,23 @@ async function seed() {
   await db
     .insert(breed)
     .values([
-      { name: "Domestic Shorthair", description: "Common mixed-breed shorthair", origin: "Worldwide" },
-      { name: "Domestic Longhair", description: "Common mixed-breed longhair", origin: "Worldwide" },
+      {
+        name: "Domestic Shorthair",
+        description: "Common mixed-breed shorthair",
+        origin: "Worldwide",
+      },
+      {
+        name: "Domestic Longhair",
+        description: "Common mixed-breed longhair",
+        origin: "Worldwide",
+      },
       { name: "Siamese", description: "Elegant and vocal breed", origin: "Thailand" },
       { name: "Persian", description: "Long-haired, flat-faced breed", origin: "Iran" },
-      { name: "Maine Coon", description: "Large, sociable breed with tufted ears", origin: "United States" },
+      {
+        name: "Maine Coon",
+        description: "Large, sociable breed with tufted ears",
+        origin: "United States",
+      },
       { name: "Bengal", description: "Wild-looking spotted coat", origin: "United States" },
       { name: "Ragdoll", description: "Gentle, floppy temperament", origin: "United States" },
       { name: "Scottish Fold", description: "Distinctive folded ears", origin: "Scotland" },

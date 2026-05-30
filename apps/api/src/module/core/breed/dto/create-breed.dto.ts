@@ -7,6 +7,10 @@ export class CreateBreedDto {
   @ApiPropertyOptional({ description: "Breed description", type: String })
   description?: string;
 
-  @ApiPropertyOptional({ description: "Country or region of origin", type: String, example: "Thailand" })
+  @ApiPropertyOptional({
+    description: "Country or region of origin",
+    type: String,
+    example: "Thailand",
+  })
   origin?: string;
 }

@@ -13,8 +13,8 @@ import {
 import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import type { FastifyRequest } from "fastify";
 
-import { Roles } from "../auth/decorators/roles.decorator";
 import type { SessionPayload } from "../auth/auth.service";
+import { Roles } from "../auth/decorators/roles.decorator";
 import { CookieAuthGuard } from "../auth/guards/cookie-auth.guard";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { CatService } from "./cat.service";
@@ -41,10 +41,7 @@ export class CatController {
   @ApiResponse({ status: 201, type: CatDto })
   @ApiResponse({ status: 401 })
   @ApiResponse({ status: 403 })
-  create(
-    @Body() dto: CreateCatDto,
-    @Req() req: FastifyRequest & { user: SessionPayload },
-  ) {
+  create(@Body() dto: CreateCatDto, @Req() req: FastifyRequest & { user: SessionPayload }) {
     return this.catService.create(dto, req.user.sub);
   }
 

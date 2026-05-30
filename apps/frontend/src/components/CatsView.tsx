@@ -45,7 +45,10 @@ export default function CatsView({
       {isError && (
         <div className="border-border bg-card flex flex-col items-center justify-center gap-3 rounded-2xl border py-20">
           <AlertCircle size={28} className="text-muted-foreground" />
-          <p className="text-foreground text-base font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+          <p
+            className="text-foreground text-base font-semibold"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             Could not connect to the API
           </p>
           <p className="text-muted-foreground text-sm">
@@ -57,7 +60,10 @@ export default function CatsView({
       {!isLoading && !isError && cats.length === 0 && (
         <div className="border-border bg-card flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed py-24">
           <span className="animate-float text-5xl">🏠</span>
-          <p className="text-foreground text-xl font-bold" style={{ fontFamily: "var(--font-display)" }}>
+          <p
+            className="text-foreground text-xl font-bold"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             The shelter is empty!
           </p>
           <p className="text-muted-foreground mb-1 text-sm">

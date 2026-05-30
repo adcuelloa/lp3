@@ -48,10 +48,10 @@ export default function LoginModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-sm rounded-2xl">
+      <DialogContent className="rounded-2xl sm:max-w-sm">
         <DialogHeader>
           <p
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-0.5"
+            className="text-primary mb-0.5 text-xs font-semibold tracking-[0.2em] uppercase"
             style={{ fontFamily: "var(--font-body)" }}
           >
             🐾 La Gatería · Staff
@@ -62,7 +62,7 @@ export default function LoginModal({
           <DialogDescription>Staff and administrator access only.</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1">
+        <form onSubmit={handleSubmit} className="mt-1 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="login-email">Email address</Label>
             <Input
@@ -91,9 +91,9 @@ export default function LoginModal({
             />
           </div>
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-destructive text-sm">{error}</p>}
 
-          <DialogFooter className="gap-2 sm:gap-2 mt-1">
+          <DialogFooter className="mt-1 gap-2 sm:gap-2">
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
               Cancel
             </Button>

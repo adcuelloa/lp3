@@ -59,10 +59,7 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto, reply: FastifyReply) {
-    const [existing] = await db
-      .select({ id: user.id })
-      .from(user)
-      .where(eq(user.email, dto.email));
+    const [existing] = await db.select({ id: user.id }).from(user).where(eq(user.email, dto.email));
 
     if (existing) throw new ConflictException("Email already registered");
 

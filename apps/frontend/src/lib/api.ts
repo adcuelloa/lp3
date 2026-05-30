@@ -1,5 +1,5 @@
-import type { Application, AuthUser, Cat } from "@/types";
 import http from "@/lib/http";
+import type { Application, AuthUser, Cat } from "@/types";
 
 export const fetchCats = async (): Promise<Cat[]> => {
   const { data } = await http.get<Cat[]>("/cat");

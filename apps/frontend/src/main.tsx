@@ -23,8 +23,8 @@ import LoginModal from "@/components/LoginModal";
 import RegisterModal from "@/components/RegisterModal";
 import { fetchApplications, fetchCats, fetchMe } from "@/lib/api";
 import { appReducer, initialState } from "@/lib/app-reducer";
-import type { Application, Cat } from "@/types";
 import http from "@/lib/http";
+import type { Application, Cat } from "@/types";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -32,7 +32,8 @@ const queryClient = new QueryClient({
 
 function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
-  const { view, isAddOpen, isLoginOpen, isRegisterOpen, editCat, adoptingCat, appliedCatIds } = state;
+  const { view, isAddOpen, isLoginOpen, isRegisterOpen, editCat, adoptingCat, appliedCatIds } =
+    state;
   const qc = useQueryClient();
 
   const { data: authUser } = useQuery({
@@ -256,7 +257,11 @@ function App() {
         catName={adoptingCat?.name}
         onSubmit={(name, email, password) => registerMutation.mutate({ name, email, password })}
         isPending={registerMutation.isPending}
-        error={registerMutation.isError ? "Could not create account. Email may already be registered." : null}
+        error={
+          registerMutation.isError
+            ? "Could not create account. Email may already be registered."
+            : null
+        }
         onSwitchToLogin={() => dispatch({ type: "SET_LOGIN_OPEN", open: true })}
       />
 

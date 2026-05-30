@@ -113,7 +113,10 @@ function CatForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1 max-h-[65vh] overflow-y-auto pr-1">
+    <form
+      onSubmit={handleSubmit}
+      className="mt-1 flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1"
+    >
       <div className="flex flex-col gap-2">
         <Label htmlFor="cat-name">Name *</Label>
         <Input
@@ -208,7 +211,7 @@ function CatForm({
           onChange={(e) => setForm({ description: e.target.value })}
           placeholder="Personality, health notes, special needs…"
           rows={3}
-          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+          className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full resize-none rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
 
@@ -219,14 +222,14 @@ function CatForm({
           aria-label="Available for adoption"
           checked={form.isAvailable}
           onChange={(e) => setForm({ isAvailable: e.target.checked })}
-          className="size-4 rounded border-input accent-primary"
+          className="border-input accent-primary size-4 rounded"
         />
         <Label htmlFor="cat-available" className="cursor-pointer font-normal">
           Available for adoption
         </Label>
       </div>
 
-      <DialogFooter className="gap-2 sm:gap-2 pt-1">
+      <DialogFooter className="gap-2 pt-1 sm:gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
@@ -252,10 +255,10 @@ export default function CatModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg rounded-2xl">
+      <DialogContent className="rounded-2xl sm:max-w-lg">
         <DialogHeader>
           <p
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-0.5"
+            className="text-primary mb-0.5 text-xs font-semibold tracking-[0.2em] uppercase"
             style={{ fontFamily: "var(--font-body)" }}
           >
             🐾 La Gatería

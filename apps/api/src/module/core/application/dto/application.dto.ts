@@ -19,7 +19,12 @@ export class ApplicationDto {
   @ApiPropertyOptional({ description: "Adoption motivation message", type: String })
   message?: string | null;
 
-  @ApiProperty({ description: "Application status", type: String, enum: ["pending", "approved", "rejected"], example: "pending" })
+  @ApiProperty({
+    description: "Application status",
+    type: String,
+    enum: ["pending", "approved", "rejected"],
+    example: "pending",
+  })
   status!: string;
 
   @ApiProperty({ description: "Submission timestamp", type: String })

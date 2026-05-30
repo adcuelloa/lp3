@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
@@ -27,10 +18,7 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   @ApiResponse({ status: 201, description: "Registered and logged in — access_token cookie set" })
   @ApiResponse({ status: 409, description: "Email already registered" })
-  register(
-    @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
-  ) {
+  register(@Body() dto: RegisterDto, @Res({ passthrough: true }) reply: FastifyReply) {
     return this.authService.register(dto, reply);
   }
 
@@ -39,10 +27,7 @@ export class AuthController {
   @ApiBody({ type: LoginDto })
   @ApiResponse({ status: 200, description: "Logged in — access_token cookie set" })
   @ApiResponse({ status: 401, description: "Invalid credentials" })
-  login(
-    @Body() dto: LoginDto,
-    @Res({ passthrough: true }) reply: FastifyReply,
-  ) {
+  login(@Body() dto: LoginDto, @Res({ passthrough: true }) reply: FastifyReply) {
     return this.authService.login(dto.email, dto.password, reply);
   }
 

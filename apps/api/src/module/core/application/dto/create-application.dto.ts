@@ -10,7 +10,11 @@ export class CreateApplicationDto {
   @ApiProperty({ description: "Applicant email", type: String, example: "ana@email.com" })
   applicantEmail!: string;
 
-  @ApiPropertyOptional({ description: "Applicant phone number", type: String, example: "+57 300 000 0000" })
+  @ApiPropertyOptional({
+    description: "Applicant phone number",
+    type: String,
+    example: "+57 300 000 0000",
+  })
   phone?: string;
 
   @ApiPropertyOptional({ description: "Adoption motivation message", type: String })

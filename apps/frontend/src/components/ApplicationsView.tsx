@@ -38,7 +38,10 @@ export default function ApplicationsView({
       {isError && (
         <div className="border-border bg-card flex flex-col items-center justify-center gap-3 rounded-2xl border py-20">
           <AlertCircle size={28} className="text-muted-foreground" />
-          <p className="text-foreground text-base font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+          <p
+            className="text-foreground text-base font-semibold"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             Could not load applications
           </p>
         </div>
@@ -47,7 +50,10 @@ export default function ApplicationsView({
       {!isLoading && !isError && applications.length === 0 && (
         <div className="border-border bg-card flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed py-24">
           <span className="text-5xl">📋</span>
-          <p className="text-foreground text-xl font-bold" style={{ fontFamily: "var(--font-display)" }}>
+          <p
+            className="text-foreground text-xl font-bold"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
             No applications yet
           </p>
           <p className="text-muted-foreground text-sm">
@@ -78,7 +84,10 @@ export default function ApplicationsView({
                   <span className="text-3xl leading-none">🐱</span>
                   <div>
                     <p className="text-muted-foreground text-xs tracking-wider uppercase">Cat</p>
-                    <p className="text-foreground font-bold" style={{ fontFamily: "var(--font-display)" }}>
+                    <p
+                      className="text-foreground font-bold"
+                      style={{ fontFamily: "var(--font-display)" }}
+                    >
                       {cat?.name ?? `#${app.catId}`}
                     </p>
                   </div>
@@ -89,7 +98,9 @@ export default function ApplicationsView({
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="text-foreground font-semibold">{app.applicantName}</p>
-                    <Badge className={`border-0 text-[10px] tracking-wider uppercase ${colorClass}`}>
+                    <Badge
+                      className={`border-0 text-[10px] tracking-wider uppercase ${colorClass}`}
+                    >
                       {app.status}
                     </Badge>
                   </div>
@@ -109,7 +120,7 @@ export default function ApplicationsView({
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 rounded-full border-green-300 text-green-700 hover:bg-green-50 text-xs px-3"
+                        className="h-7 rounded-full border-green-300 px-3 text-xs text-green-700 hover:bg-green-50"
                         disabled={isUpdating}
                         onClick={() => onUpdateStatus(app.id, "approved")}
                       >
@@ -118,7 +129,7 @@ export default function ApplicationsView({
                       <Button
                         size="sm"
                         variant="outline"
-                        className="h-7 rounded-full border-red-300 text-red-700 hover:bg-red-50 text-xs px-3"
+                        className="h-7 rounded-full border-red-300 px-3 text-xs text-red-700 hover:bg-red-50"
                         disabled={isUpdating}
                         onClick={() => onUpdateStatus(app.id, "rejected")}
                       >

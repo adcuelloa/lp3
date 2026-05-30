@@ -25,7 +25,14 @@ interface HeroHeaderProps {
   onMeetCats: () => void;
 }
 
-export default function HeroHeader({ auth, cats, onLogout, onLoginOpen, onAddOpen, onMeetCats }: HeroHeaderProps) {
+export default function HeroHeader({
+  auth,
+  cats,
+  onLogout,
+  onLoginOpen,
+  onAddOpen,
+  onMeetCats,
+}: HeroHeaderProps) {
   const isAuthenticated = auth.user != null;
 
   return (
@@ -61,17 +68,17 @@ export default function HeroHeader({ auth, cats, onLogout, onLoginOpen, onAddOpe
               href="https://github.com/adcuelloa/lp3"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-white/20 p-1.5 text-white/50 transition-colors hover:border-white/40 hover:text-white hover:bg-white/8"
+              className="rounded-full border border-white/20 p-1.5 text-white/50 transition-colors hover:border-white/40 hover:bg-white/8 hover:text-white"
               aria-label="GitHub repository"
             >
               <GitHub width={16} height={16} />
             </a>
             {isAuthenticated ? (
               <>
-                <span className="text-white/50 text-xs hidden sm:block">
+                <span className="hidden text-xs text-white/50 sm:block">
                   {auth.user?.name}
                   {auth.isAdmin && (
-                    <span className="ml-1.5 rounded-full bg-primary/30 px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase text-primary">
+                    <span className="bg-primary/30 text-primary ml-1.5 rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wider uppercase">
                       admin
                     </span>
                   )}
@@ -177,7 +184,7 @@ export default function HeroHeader({ auth, cats, onLogout, onLoginOpen, onAddOpe
       </div>
 
       <svg
-        className="absolute left-0 right-0 block"
+        className="absolute right-0 left-0 block"
         width="100%"
         height="72"
         viewBox="0 0 1440 72"

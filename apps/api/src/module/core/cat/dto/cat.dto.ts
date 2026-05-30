@@ -13,7 +13,12 @@ export class CatDto {
   @ApiPropertyOptional({ description: "Coat color", type: String, example: "Orange tabby" })
   color?: string | null;
 
-  @ApiProperty({ description: "Gender", type: String, enum: ["male", "female", "unknown"], example: "male" })
+  @ApiProperty({
+    description: "Gender",
+    type: String,
+    enum: ["male", "female", "unknown"],
+    example: "male",
+  })
   gender!: string;
 
   @ApiPropertyOptional({ description: "Age in months", type: Number, example: 24 })

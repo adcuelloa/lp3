@@ -76,10 +76,10 @@ export default function ApplicationModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-md rounded-2xl">
+      <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
           <p
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-0.5"
+            className="text-primary mb-0.5 text-xs font-semibold tracking-[0.2em] uppercase"
             style={{ fontFamily: "var(--font-body)" }}
           >
             🐾 La Gatería
@@ -92,7 +92,7 @@ export default function ApplicationModal({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-1">
+        <form onSubmit={handleSubmit} className="mt-1 flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <Label htmlFor="app-name">Full name *</Label>
             <Input
@@ -138,7 +138,7 @@ export default function ApplicationModal({
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Why would you like to adopt this cat?"
               rows={3}
-              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+              className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full resize-none rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
