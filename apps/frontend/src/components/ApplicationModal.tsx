@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +28,8 @@ interface ApplicationModalProps {
   catId: number;
   onSubmit: (data: ApplicationFormData) => void;
   isPending: boolean;
+  prefillName?: string;
+  prefillEmail?: string;
 }
 
 export default function ApplicationModal({
@@ -37,9 +39,13 @@ export default function ApplicationModal({
   catId,
   onSubmit,
   isPending,
+  prefillName = "",
+  prefillEmail = "",
 }: ApplicationModalProps) {
-  const [applicantName, setApplicantName] = useState("");
-  const [applicantEmail, setApplicantEmail] = useState("");
+  const initNameRef = useRef(prefillName);
+  const initEmailRef = useRef(prefillEmail);
+  const [applicantName, setApplicantName] = useState(initNameRef.current);
+  const [applicantEmail, setApplicantEmail] = useState(initEmailRef.current);
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
 
-import { application } from "@project/db";
+import { application, cat } from "@project/db";
 
 import { db } from "@/lib/drizzle";
 
@@ -28,6 +28,11 @@ export class ApplicationService {
       .set({ status })
       .where(eq(application.id, id))
       .returning();
+
+    if (status === "approved" && updated) {
+      await db.update(cat).set({ isAvailable: false }).where(eq(cat.id, updated.catId));
+    }
+
     return updated;
   }
 }

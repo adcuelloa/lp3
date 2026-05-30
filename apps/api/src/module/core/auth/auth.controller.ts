@@ -14,12 +14,25 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import type { SessionPayload } from "./auth.service";
 import { AuthService } from "./auth.service";
 import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
 import { CookieAuthGuard } from "./guards/cookie-auth.guard";
 
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(@Inject(AuthService) private readonly authService: AuthService) {}
+
+  @Post("register")
+  @ApiOperation({ summary: "Create a member account and log in" })
+  @ApiBody({ type: RegisterDto })
+  @ApiResponse({ status: 201, description: "Registered and logged in — access_token cookie set" })
+  @ApiResponse({ status: 409, description: "Email already registered" })
+  register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
+    return this.authService.register(dto, reply);
+  }
 
   @Post("login")
   @ApiOperation({ summary: "Log in — sets access_token cookie" })

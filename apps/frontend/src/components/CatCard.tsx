@@ -40,6 +40,7 @@ export default function CatCard({
   showEdit = false,
 }: CatCardProps) {
   const palette = PALETTES[cat.id % PALETTES.length];
+  const isAdopted = cat.isAvailable === false;
 
   const ageLabel =
     cat.ageMonths != null
@@ -57,8 +58,9 @@ export default function CatCard({
     <Card
       className="gap-0 py-0 transition-transform duration-300 hover:-translate-y-1"
       style={{
-        backgroundColor: palette.bg,
-        borderColor: palette.border,
+        backgroundColor: isAdopted ? "#f5f5f5" : palette.bg,
+        borderColor: isAdopted ? "#e0e0e0" : palette.border,
+        opacity: isAdopted ? 0.75 : 1,
         animation: `fade-up 0.5s ease-out ${index * 65}ms both`,
       }}
     >
@@ -66,7 +68,11 @@ export default function CatCard({
         <div className="flex items-start justify-between">
           <span
             className="text-5xl leading-none select-none"
-            style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))" }}
+            style={{
+              filter: isAdopted
+                ? "grayscale(0.6) drop-shadow(0 2px 4px rgba(0,0,0,0.06))"
+                : "drop-shadow(0 2px 4px rgba(0,0,0,0.08))",
+            }}
           >
             {palette.emoji}
           </span>
@@ -99,7 +105,11 @@ export default function CatCard({
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        {hasRequest ? (
+        {isAdopted ? (
+          <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-emerald-700 bg-emerald-50">
+            ❤️ Adopted
+          </div>
+        ) : hasRequest ? (
           <div className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-semibold text-primary bg-primary/10">
             <HeartHandshake size={16} className="animate-heart-pop" />
             Application sent!
