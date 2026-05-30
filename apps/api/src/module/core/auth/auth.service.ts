@@ -117,7 +117,7 @@ export class AuthService {
     void reply.setCookie(COOKIE, token, {
       httpOnly: true,
       secure: isProd,
-      sameSite: "lax",
+      sameSite: isProd ? "none" : "lax",
       path: "/",
       maxAge: jwtConfig.accessExpiresIn,
     });
